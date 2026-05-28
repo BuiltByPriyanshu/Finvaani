@@ -1,3 +1,12 @@
+---
+title: FinVaani
+emoji: 🪔
+colorFrom: orange
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
 # 🪔 FinVaani — Indian Finance Q&A System
 
 ### A Bilingual Indian Financial Q&A System
