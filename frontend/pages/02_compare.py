@@ -82,19 +82,22 @@ def load_all_models():
     loaded["raw"]      = (raw, tok)
     loaded["prompted"] = (raw, tok)
 
-    for key in ["lora_finetuned", "winning_ticket"]:
-        path = os.path.join(MODELS_DIR, key)
-        if os.path.exists(path) and os.listdir(path):
-            try:
-                t = AutoTokenizer.from_pretrained(path)
-                t.pad_token = t.eos_token
-                b = AutoModelForCausalLM.from_pretrained(
-                    MODEL_NAME, dtype=torch.float32)
-                m = PeftModel.from_pretrained(b, path).eval()
-                loaded[key] = (m, t)
-            except Exception:
-                loaded[key] = (raw, tok)
-        else:
+HF_ADAPTERS = {
+        "lora_finetuned": "Priyanshuapr447/finvaani-lora",
+        "winning_ticket": "Priyanshuapr447/finvaani-winning-ticket",
+    }
+
+    for key, hf_repo in HF_ADAPTERS.items():
+        local_path = os.path.join(MODELS_DIR, key)
+        adapter_source = hf_repo if not (os.path.exists(local_path) and os.listdir(local_path)) else local_path
+        try:
+            t = AutoTokenizer.from_pretrained(adapter_source)
+            t.pad_token = t.eos_token
+            b = AutoModelForCausalLM.from_pretrained(
+                MODEL_NAME, dtype=torch.float32)
+            m = PeftModel.from_pretrained(b, adapter_source).eval()
+            loaded[key] = (m, t)
+        except Exception:
             loaded[key] = (raw, tok)
 
     return loaded

@@ -43,18 +43,24 @@ def load_chat_model():
     # MPS is faster per-token but causes OOM on 17GB when model is 5.6GB
     device = "cpu"
 
-    for candidate in ["lora_finetuned", "winning_ticket"]:
-        path = os.path.join(models_dir, candidate)
-        if os.path.exists(path) and os.listdir(path):
-            try:
-                tok = AutoTokenizer.from_pretrained(path)
-                tok.pad_token = tok.eos_token
-                base = AutoModelForCausalLM.from_pretrained(
-                    MODEL_NAME, dtype=torch.float32)
-                model = PeftModel.from_pretrained(base, path).eval()
-                return model, tok, candidate, device
-            except Exception:
-                continue
+    HF_ADAPTERS = {
+        "lora_finetuned": "Priyanshuapr447/finvaani-lora",
+        "winning_ticket": "Priyanshuapr447/finvaani-winning-ticket",
+    }
+
+    for candidate, hf_repo in HF_ADAPTERS.items():
+        # Try HF Hub first, fall back to local path
+        local_path = os.path.join(models_dir, candidate)
+        adapter_source = hf_repo if not (os.path.exists(local_path) and os.listdir(local_path)) else local_path
+        try:
+            tok = AutoTokenizer.from_pretrained(adapter_source)
+            tok.pad_token = tok.eos_token
+            base = AutoModelForCausalLM.from_pretrained(
+                MODEL_NAME, dtype=torch.float32)
+            model = PeftModel.from_pretrained(base, adapter_source).eval()
+            return model, tok, candidate, device
+        except Exception:
+            continue
 
     # Fallback: raw mGPT
     tok = AutoTokenizer.from_pretrained(MODEL_NAME)
