@@ -1,7 +1,7 @@
 ---
 title: FinVaani
 emoji: 🪔
-colorFrom: orange
+colorFrom: yellow
 colorTo: green
 sdk: docker
 app_port: 7860
