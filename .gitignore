@@ -1,0 +1,27 @@
+# Model weights — too large for GitHub
+models/lora_finetuned/
+models/winning_ticket/
+models/raw_mgpt/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+.venv/
+
+# Data — keep samples, exclude full raw
+data/raw/
+data/database/
+
+# Colab / Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# OS
+.DS_Store

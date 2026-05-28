@@ -1,0 +1,5 @@
+Model,BERTScore_EN,BERTScore_HI,BERTScore_Overall
+Raw mGPT,0.7668,0.663,0.7253
+Prompted mGPT,0.7666,0.6807,0.7322
+LoRA Fine-tuned,0.7704,0.6827,0.7353
+Winning Ticket,0.7605,0.6522,0.7172
